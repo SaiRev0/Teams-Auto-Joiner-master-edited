@@ -1,11 +1,9 @@
-import imp
-
-
 import keep_alive
 import json
 import random
 import re
 import time
+import os
 from datetime import datetime
 from threading import Timer
 
@@ -152,13 +150,9 @@ def load_config():
 def init_browser():
     global browser
 
-    if "chrome_type" in config and config['chrome_type'] == "msedge":
-        chrome_options = EdgeOptions()
-        chrome_options.use_chromium = True
+    chrome_options = webdriver.ChromeOptions()
 
-    else:
-        chrome_options = webdriver.ChromeOptions()
-
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument('--ignore-ssl-errors')
     chrome_options.add_argument('--use-fake-ui-for-media-stream')
@@ -184,19 +178,8 @@ def init_browser():
     if 'mute_audio' in config and config['mute_audio']:
         chrome_options.add_argument("--mute-audio")
 
-    if 'chrome_type' in config:
-        if config['chrome_type'] == "chromium":
-            browser = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install(),
-                                       options=chrome_options)
-        elif config['chrome_type'] == "msedge":
-            browser = Edge(EdgeChromiumDriverManager().install(),
-                           options=chrome_options)
-        else:
-            browser = webdriver.Chrome(
-                ChromeDriverManager().install(), options=chrome_options)
-    else:
-        browser = webdriver.Chrome(
-            ChromeDriverManager().install(), options=chrome_options)
+    browser = webdriver.Chrome(executable_path=os.environ.get(
+        "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
     # make the window a minimum width to show the meetings menu
     window_size = browser.get_window_size()
