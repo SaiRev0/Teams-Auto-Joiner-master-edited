@@ -1,3 +1,7 @@
+import imp
+
+
+import keep_alive
 import json
 import random
 import re
@@ -30,6 +34,8 @@ hangup_thread: Timer = None
 conversation_link = "https://teams.microsoft.com/_#/conversations/a"
 mode = 3
 uuid_regex = r"\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b"
+
+keep_alive.keep_alive
 
 
 class Team:
